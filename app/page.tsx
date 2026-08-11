@@ -31,8 +31,12 @@ type Project = {
   number: string;
   title: string;
   label: string;
+  period: string;
+  role: string;
   description: string;
   detail: string;
+  contributions: string[];
+  outcome: string;
   icon: LucideIcon;
   tone: "blue" | "violet" | "orange";
   technologies: string[];
@@ -140,8 +144,12 @@ const projects: Project[] = [
     number: "01",
     title: "Switchgear / ADMS",
     label: "ENTGRA · INDUSTRIAL SYSTEMS",
+    period: "2025 — 2026",
+    role: "Backend · security · delivery",
     description: "Real-time monitoring and remote control for electrical switchgear using IEC 60870-5-104.",
-    detail: "Contributed to a scalable Advanced Distribution Management System for critical infrastructure. Implemented TOTP authentication for the Double Command execution flow, advanced device search, AWS monitoring, and zero-downtime deployment strategies.",
+    detail: "Contributed to a scalable Advanced Distribution Management System for critical infrastructure, supporting remote switchgear operations through the IEC 60870-5-104 protocol.",
+    contributions: ["Secured the critical Double Command flow with TOTP authentication for Select and Execute operations", "Built advanced search for ADMS device nodes to speed up navigation and issue resolution", "Supported AWS monitoring and proposed automated zero-downtime deployment strategies"],
+    outcome: "Safer remote operations, faster device discovery, and a clearer path from manual releases to resilient delivery.",
     icon: Network,
     tone: "blue",
     technologies: ["Java", "Spring Boot", "React", "AWS"],
@@ -150,8 +158,12 @@ const projects: Project[] = [
     number: "02",
     title: "NEXA Platform",
     label: "WILEY · OBSERVABILITY",
+    period: "2025",
+    role: "Full-stack · cloud · performance",
     description: "A product-health platform aggregating Dynatrace, JSM, and Zabbix signals across multiple tenants.",
-    detail: "Developed a unified Problem Dashboard, integrated Keycloak and Azure AD for secure SSO, refactored performance-heavy paths, and used VisualVM to identify memory leaks and tune JVM behavior in local and Dockerized environments.",
+    detail: "Worked on an in-house observability suite that gives teams a unified view of application health, incident trends, and synthetic monitor status across multiple tenants.",
+    contributions: ["Developed the unified Problem Dashboard across Dynatrace and Zabbix incidents", "Integrated Keycloak with Azure AD to enable secure single sign-on", "Used VisualVM to identify memory leaks, tune heap allocations, and analyse JVM threads"],
+    outcome: "A clearer operational view for service teams, with faster incident awareness and a more dependable platform experience.",
     icon: Layers3,
     tone: "violet",
     technologies: ["React", "TypeScript", "Java", "Keycloak"],
@@ -160,8 +172,12 @@ const projects: Project[] = [
     number: "03",
     title: "Cancer Victims Association Platform",
     label: "CODUZA · COMMUNITY PLATFORM",
+    period: "2024",
+    role: "Full-stack development",
     description: "A digital platform built to support the Cancer Victims Association Sri Lanka.",
-    detail: "Contributed to a platform using Next.js and Node.js, building practical product features for an organisation doing meaningful community work.",
+    detail: "Contributed to a community-focused platform during my first professional role, using Next.js and Node.js to help turn an organisation's needs into a usable digital experience.",
+    contributions: ["Developed product features with Next.js and Node.js", "Translated requirements into practical, user-facing platform flows", "Worked on software with a direct human and community purpose"],
+    outcome: "An early project that connected engineering fundamentals with software intended to support people beyond the screen.",
     icon: Users,
     tone: "orange",
     technologies: ["Next.js", "Node.js", "PostgreSQL"],
@@ -250,7 +266,7 @@ export default function Home() {
 
       <section className="experience experience-dark section-space" id="experience"><div className="page-width"><div className="section-head"><div><div className="section-kicker"><span>02</span><span>Professional experience / career path</span></div><h2>Where I&apos;ve<br /><span>built and grown.</span></h2></div><p>A simple view of the teams, systems, and real-world problems that have shaped my engineering journey.</p></div><div className="career-list">{roles.map((role, index) => <article className={`career-row ${role.current ? "current" : ""}`} key={`${role.company}-${role.dates}`}><div className="career-marker"><span>{String(index + 1).padStart(2, "0")}</span><i /></div><div className="career-main"><div className="career-top"><div className="career-company"><span className={`company-logo ${role.tone} ${role.logoClass ?? ""}`}><Image src={role.logo} alt={`${role.brand} logo`} width={64} height={40} className="company-logo-image" /></span><div><strong>{role.brand}</strong><small>{role.company}</small></div></div><span className="career-date">{role.dates}</span></div><div className="career-body"><div><span className="career-label">{role.current ? "current role" : "experience"}</span><h3>{role.role}</h3><p>{role.description}</p></div><div className="career-details"><ul>{role.highlights.map((highlight) => <li key={highlight}><CheckCircle2 size={13} /> <span>{highlight}</span></li>)}</ul><div className="experience-tags">{role.stack.map((item) => <span key={item}>{item}</span>)}</div></div></div></div></article>)}</div></div></section>
 
-      <section className="work page-width section-space" id="work"><div className="section-head"><div><div className="section-kicker"><span>03</span><span>Projects</span></div><h2>Production work<br /><span>with a purpose.</span></h2></div><p>Industrial systems, observability, and community platforms.</p></div><div className="project-grid">{projects.map((project) => <article className={`project-card ${project.tone}`} key={project.number}><div className="project-top"><span className="project-number">{project.number}</span><IconBadge icon={project.icon} tone={project.tone} /></div><div className="project-label">{project.label}</div><h3>{project.title}</h3><p>{project.description}</p><div className="project-bottom"><div className="tag-row">{project.technologies.map((technology) => <span key={technology}>{technology}</span>)}</div><button onClick={() => setSelectedProject(project)} aria-label={`Read more about ${project.title}`}>Read case note <ArrowUpRight size={14} /></button></div></article>)}</div></section>
+      <section className="work work-dark section-space" id="work"><div className="page-width"><div className="section-head"><div><div className="section-kicker"><span>03</span><span>Selected work / project dossiers</span></div><h2>Systems I&apos;ve<br /><span>helped move forward.</span></h2></div><p>Professional projects grounded in security, observability, reliable delivery, and meaningful product work.</p></div><div className="project-dossiers">{projects.map((project) => <article className={`project-dossier ${project.tone}`} key={project.number}><div className="project-dossier-index"><span>{project.number}</span><IconBadge icon={project.icon} tone={project.tone} /></div><div className="project-dossier-main"><div className="project-dossier-meta"><span>{project.label}</span><span>{project.period}</span></div><div className="project-dossier-heading"><div><h3>{project.title}</h3><span>{project.role}</span></div><button onClick={() => setSelectedProject(project)} aria-label={`Read detailed case note about ${project.title}`}><ArrowUpRight size={17} /></button></div><p className="project-dossier-summary">{project.description}</p><div className="project-dossier-grid"><div><span className="dossier-label">What I worked on</span><ul>{project.contributions.map((contribution) => <li key={contribution}><CheckCircle2 size={13} /> <span>{contribution}</span></li>)}</ul></div><div className="project-dossier-side"><span className="dossier-label">Outcome</span><p>{project.outcome}</p><span className="dossier-label">Stack</span><div className="tag-row">{project.technologies.map((technology) => <span key={technology}>{technology}</span>)}</div></div></div></div></article>)}</div></div></section>
 
       <section className="research section-space" id="research"><div className="page-width research-grid"><div><div className="section-kicker"><span>04</span><span>Research</span></div><h2>Synapse CI</h2><p className="research-title">Intelligent Test Prioritization & Chaos Engineering Framework</p><p>Presented at the 12th International Conference on Computer Technology Applications, FH JOANNEUM, Vienna, Austria · 2026.</p><div className="research-links"><a href="https://www.linkedin.com/in/kaweeshamr/" target="_blank" rel="noreferrer"><Presentation size={15} /> Presentation details <ExternalLink size={13} /></a><a href="mailto:kaweesha.mr@gmail.com"><BookOpen size={15} /> Ask about the paper <ArrowUpRight size={13} /></a></div></div><div className="research-proof"><div className="proof-mark"><Award size={25} /></div><strong>BEST OF SESSION<br />PRESENTATION</strong><span>ICCTA 2026 · AUSTRIA</span></div></div></section>
 
@@ -264,7 +280,7 @@ export default function Home() {
 
       <footer className="footer page-width"><span>© 2026 Kaweesha Marasinghe</span><span>Software Engineer · Colombo, Sri Lanka</span><a href="#top">Back to top <ArrowUpRight size={12} /></a></footer>
 
-      {selectedProject && <div className="modal-backdrop"><div className={`case-modal ${selectedProject.tone}`} role="dialog" aria-modal="true" aria-labelledby="case-title"><button className="modal-close" onClick={() => setSelectedProject(null)} aria-label="Close case note"><X size={19} /></button><div className="project-label">{selectedProject.number} / {selectedProject.label}</div><h2 id="case-title">{selectedProject.title}</h2><p className="modal-lede">{selectedProject.description}</p><p>{selectedProject.detail}</p><div className="tag-row">{selectedProject.technologies.map((technology) => <span key={technology}>{technology}</span>)}</div></div></div>}
+      {selectedProject && <div className="modal-backdrop"><div className={`case-modal ${selectedProject.tone}`} role="dialog" aria-modal="true" aria-labelledby="case-title"><button className="modal-close" onClick={() => setSelectedProject(null)} aria-label="Close case note"><X size={19} /></button><div className="project-label">{selectedProject.number} / {selectedProject.label} / {selectedProject.period}</div><h2 id="case-title">{selectedProject.title}</h2><p className="modal-lede">{selectedProject.description}</p><p>{selectedProject.detail}</p><span className="dossier-label">Key contributions</span><ul className="modal-contributions">{selectedProject.contributions.map((contribution) => <li key={contribution}><CheckCircle2 size={14} /> <span>{contribution}</span></li>)}</ul><p className="modal-outcome"><strong>Outcome</strong>{selectedProject.outcome}</p><div className="tag-row">{selectedProject.technologies.map((technology) => <span key={technology}>{technology}</span>)}</div></div></div>}
     </main>
   );
 }
