@@ -2,67 +2,92 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import type { LucideIcon } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowRight,
+  ArrowUpRight,
+  Award,
+  BookOpen,
+  CheckCircle2,
+  CloudCog,
+  Code2,
+  Database,
+  Download,
+  ExternalLink,
+  GitBranch,
+  GraduationCap,
+  Layers3,
+  Mail,
+  Menu,
+  Network,
+  Phone,
+  Server,
+  ShieldCheck,
+  Sparkles,
+  Terminal,
+  Workflow,
+  X,
+} from "lucide-react";
 
 type Project = {
-  index: string;
+  number: string;
   title: string;
-  subtitle: string;
-  type: string;
-  color: string;
-  summary: string;
+  label: string;
+  description: string;
   detail: string;
-  stack: string[];
-  signal: string;
+  icon: LucideIcon;
+  tone: "blue" | "violet" | "orange";
+  technologies: string[];
+  result: string;
 };
 
 const projects: Project[] = [
   {
-    index: "01",
+    number: "01",
     title: "Switchgear / ADMS",
-    subtitle: "A control room for critical infrastructure.",
-    type: "INDUSTRIAL SYSTEMS",
-    color: "lime",
-    summary:
-      "Real-time monitoring and remote control for electrical switchgear, built around an IEC 60870-5-104 workflow.",
-    detail:
-      'I helped shape a scalable Advanced Distribution Management System with a focus on safe remote operations. The “Double Command” flow is protected with TOTP authentication, while advanced search makes large device trees easier to navigate. I also supported AWS environment monitoring and zero-downtime deployment planning.',
-    stack: ["Java", "Spring Boot", "React", "AWS", "TOTP"],
-    signal: "SAFETY FIRST",
+    label: "INDUSTRIAL SOFTWARE",
+    description: "Real-time monitoring and remote control for electrical switchgear using the IEC 60870-5-104 protocol.",
+    detail: "I contributed to a scalable Advanced Distribution Management System for critical infrastructure. The work included TOTP authentication for the Double Command execution flow, advanced device search, AWS monitoring, and zero-downtime deployment strategies.",
+    icon: Network,
+    tone: "blue",
+    technologies: ["Java", "Spring Boot", "React", "AWS"],
+    result: "Built for safe, visible operations",
   },
   {
-    index: "02",
+    number: "02",
     title: "NEXA Platform",
-    subtitle: "One view of a thousand small signals.",
-    type: "OBSERVABILITY",
-    color: "blue",
-    summary:
-      "A product health platform that unifies Dynatrace, JSM and Zabbix data across multiple tenants.",
-    detail:
-      "The work was equal parts interface and infrastructure: a unified problem dashboard for incident visibility, Keycloak + Azure AD for secure SSO, and JVM tuning with VisualVM to reduce memory pressure. The result was a faster path from signal to response.",
-    stack: ["React", "TypeScript", "Java", "Keycloak", "JVM"],
-    signal: "SIGNAL → ACTION",
+    label: "OBSERVABILITY",
+    description: "A product health platform unifying Dynatrace, JSM, and Zabbix signals across multiple tenants.",
+    detail: "I helped develop the unified Problem Dashboard, integrated Keycloak + Azure AD for secure SSO, refactored performance-heavy paths, and used VisualVM to identify memory leaks and tune JVM behavior in local and Dockerized environments.",
+    icon: Workflow,
+    tone: "violet",
+    technologies: ["React", "TypeScript", "Java", "Keycloak"],
+    result: "From signal to response, faster",
   },
   {
-    index: "03",
+    number: "03",
     title: "Synapse CI",
-    subtitle: "Research that survives outside the lab.",
-    type: "RESEARCH / DX",
-    color: "orange",
-    summary:
-      "An intelligent test prioritization and chaos engineering framework, presented at ICCTA 2026 in Austria.",
-    detail:
-      "Synapse CI explores how teams can spend less time waiting and more time learning. The project was published at the 12th International Conference on Computer Technology Applications and received the Best of Session Presentation award.",
-    stack: ["CI/CD", "Test Systems", "Chaos Engineering", "Research"],
-    signal: "PUBLISHED · 2026",
+    label: "RESEARCH / DEVELOPER EXPERIENCE",
+    description: "An intelligent test prioritization and chaos engineering framework presented at ICCTA 2026.",
+    detail: "Synapse CI explores how engineering teams can reduce feedback time while increasing confidence. The research was presented in Austria and received the Best of Session Presentation award.",
+    icon: Sparkles,
+    tone: "orange",
+    technologies: ["CI/CD", "Test Systems", "Research", "Chaos Engineering"],
+    result: "Published research, practical thinking",
   },
 ];
 
-const capabilities = [
-  { name: "Backend systems", value: "JAVA · GO · NODE" },
-  { name: "Frontend craft", value: "REACT · NEXT.JS · TS" },
-  { name: "Cloud & delivery", value: "AWS · DOCKER · K8S" },
-  { name: "Data layer", value: "POSTGRES · REDIS · MONGO" },
+const toolkit = [
+  { title: "Backend engineering", detail: "Java · Spring Boot · Go · Node.js", icon: Server },
+  { title: "Frontend development", detail: "React · Next.js · TypeScript · Tailwind", icon: Code2 },
+  { title: "Cloud & delivery", detail: "AWS · Docker · Kubernetes · Terraform", icon: CloudCog },
+  { title: "Data & integration", detail: "PostgreSQL · MongoDB · Redis · RabbitMQ", icon: Database },
 ];
+
+function IconBadge({ icon: Icon, tone = "blue" }: { icon: LucideIcon; tone?: string }) {
+  return <span className={`icon-badge ${tone}`}><Icon size={18} strokeWidth={1.8} /></span>;
+}
 
 export default function Home() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -70,168 +95,69 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
     document.body.style.overflow = selectedProject ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [selectedProject]);
 
   const closeMenu = () => setMenuOpen(false);
 
   return (
     <main>
-      <div className="grain" aria-hidden="true" />
       <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
-        <a className="brand" href="#top" onClick={closeMenu} aria-label="Back to top">
+        <a className="brand" href="#top" onClick={closeMenu} aria-label="Kaweesha Marasinghe home">
           <span className="brand-mark">KM</span>
-          <span className="brand-copy">
-            <strong>Kaweesha</strong>
-            <small>software engineer</small>
-          </span>
+          <span><strong>Kaweesha Marasinghe</strong><small>Software Engineer</small></span>
         </a>
-        <button
-          className={`menu-toggle ${menuOpen ? "is-open" : ""}`}
-          onClick={() => setMenuOpen((open) => !open)}
-          aria-label="Toggle navigation"
-          aria-expanded={menuOpen}
-        >
-          <span />
-          <span />
-        </button>
-        <nav className={menuOpen ? "is-open" : ""} aria-label="Primary navigation">
-          <a href="#work" onClick={closeMenu}>01 / Work</a>
-          <a href="#story" onClick={closeMenu}>02 / Story</a>
-          <a href="#toolkit" onClick={closeMenu}>03 / Toolkit</a>
-          <a href="#contact" onClick={closeMenu}>04 / Contact</a>
+        <button className="menu-toggle" onClick={() => setMenuOpen((value) => !value)} aria-label="Toggle navigation" aria-expanded={menuOpen}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button>
+        <nav className={menuOpen ? "is-open" : ""} aria-label="Main navigation">
+          <a href="#about" onClick={closeMenu}>About</a>
+          <a href="#work" onClick={closeMenu}>Work</a>
+          <a href="#toolkit" onClick={closeMenu}>Toolkit</a>
+          <a href="#contact" onClick={closeMenu}>Contact</a>
         </nav>
-        <a className="header-link" href="/Kaweesha-Marasinghe-Resume-2.pdf" download>
-          Download CV <span>↗</span>
-        </a>
+        <a className="header-cta" href="/Kaweesha-Marasinghe-Resume-2.pdf" download><Download size={14} /> Download CV</a>
       </header>
 
-      <section className="hero section-shell" id="top">
-        <div className="hero-copy">
-          <p className="eyebrow reveal reveal-1"><span className="pulse-dot" /> AVAILABLE FOR GOOD WORK · COLOMBO, LK</p>
-          <h1 className="reveal reveal-2">
-            Systems with a <em>human</em> side.
-          </h1>
-          <p className="hero-lede reveal reveal-3">
-            I&apos;m Kaweesha — a software engineer who turns complex systems into calm, useful experiences. Backend depth, frontend instinct, and a soft spot for the details people usually miss.
-          </p>
-          <div className="hero-actions reveal reveal-4">
-            <a className="button button-primary" href="#work">See the work <span>↓</span></a>
-            <a className="text-link" href="mailto:kaweesha.mr@gmail.com">Start a conversation <span>↗</span></a>
+      <section className="hero" id="top">
+        <div className="hero-left page-width">
+          <div className="eyebrow"><span className="status-dot" /> Open to meaningful work <span className="eyebrow-divider">/</span> Colombo, Sri Lanka</div>
+          <h1>Software engineer building <span>reliable products.</span></h1>
+          <p className="hero-intro">I work across backend systems, frontend experiences, and the infrastructure that connects them — with a focus on making complex things feel clear.</p>
+          <div className="hero-actions"><a className="button button-dark" href="#work">Explore my work <ArrowRight size={16} /></a><a className="button button-quiet" href="mailto:kaweesha.mr@gmail.com">Let&apos;s talk <ArrowUpRight size={16} /></a></div>
+          <div className="hero-meta"><span><CheckCircle2 size={15} /> Currently Software Engineer at Virtusa</span><span><GraduationCap size={15} /> BSc Software Engineering at SLIIT</span></div>
+        </div>
+        <div className="hero-right">
+          <div className="hero-panel">
+            <div className="panel-top"><span><span className="panel-dot blue-dot" /><span className="panel-dot violet-dot" /><span className="panel-dot orange-dot" /></span><span>kaweesha / profile.ts</span><Terminal size={15} /></div>
+            <div className="panel-body"><div className="code-line muted">01 <span>const</span> engineer = &#123;</div><div className="code-line indent">02 <b>name:</b> <em>&quot;Kaweesha Marasinghe&quot;</em>,</div><div className="code-line indent">03 <b>focus:</b> <em>&quot;useful systems&quot;</em>,</div><div className="code-line indent">04 <b>mindset:</b> <em>&quot;learn, share, improve&quot;</em>,</div><div className="code-line muted">05 &#125;</div><div className="panel-divider" /><div className="code-status"><span><span className="status-dot" /> Available for good work</span><span>v.2026</span></div></div>
+            <div className="panel-profile"><div className="portrait"><Image src="/images/kaweesha-avatar.png" alt="Portrait of Kaweesha Marasinghe" width={80} height={80} priority /></div><div><strong>Kaweesha<br />Marasinghe</strong><span>Software Engineer</span></div><ArrowUpRight size={18} /></div>
           </div>
+          <div className="hero-corner-note"><Layers3 size={16} /><span>Backend depth<br />Frontend instinct</span></div>
         </div>
-
-        <div className="hero-visual reveal reveal-3" aria-label="A profile card for Kaweesha Marasinghe">
-          <div className="hero-grid" aria-hidden="true" />
-          <div className="orbit orbit-one" aria-hidden="true" />
-          <div className="orbit orbit-two" aria-hidden="true" />
-          <div className="profile-card">
-            <div className="profile-card-top"><span>PROFILE / 01</span><span>2026</span></div>
-            <div className="portrait-frame"><Image src="/images/kaweesha-avatar.png" alt="Kaweesha Marasinghe" width={180} height={180} priority /></div>
-            <div className="profile-name">K. MARASINGHE</div>
-            <div className="profile-role">SOFTWARE ENGINEER<span className="cursor" /></div>
-            <div className="profile-card-bottom"><span>COLOMBO, SRI LANKA</span><span>● ONLINE</span></div>
-          </div>
-          <div className="floating-chip chip-stack"><span className="chip-symbol">⌘</span><span>full-stack<br /><b>by instinct</b></span></div>
-          <div className="floating-chip chip-degree"><span className="chip-symbol">3.78</span><span>CGPA<br /><b>SLIIT</b></span></div>
-          <div className="visual-caption">[ A LITTLE CODE / A LOT OF CARE ]</div>
-        </div>
-
-        <div className="hero-meta reveal reveal-4">
-          <span>Scroll to explore</span><span className="scroll-line" /><span>↓</span>
-        </div>
+        <a className="scroll-hint page-width" href="#about"><span>Scroll to explore</span><ArrowDown size={15} /></a>
       </section>
 
-      <section className="ticker" aria-label="Skills marquee">
-        <div className="ticker-track">
-          <span>BUILD WITH INTENT</span><i>✳</i><span>LEAVE THINGS BETTER</span><i>✳</i><span>BUILD WITH INTENT</span><i>✳</i><span>LEAVE THINGS BETTER</span><i>✳</i>
-        </div>
-      </section>
+      <section className="proof-strip"><div className="page-width proof-grid"><div><strong>3.78</strong><span>CGPA at SLIIT</span></div><div><strong>2026</strong><span>ICCTA research presentation</span></div><div><strong>01</strong><span>Best session presentation award</span></div><div><strong>∞</strong><span>Curiosity still in progress</span></div></div></section>
 
-      <section className="intro section-shell" id="story">
-        <div className="section-label">01 <span>/</span> THE SHORT VERSION</div>
-        <div className="intro-grid">
-          <h2>I like the space between <span>logic</span> and feeling.</h2>
-          <div className="intro-body">
-            <p className="lead-paragraph">Good software should feel like someone thought about you before you arrived.</p>
-            <p>My work sits across backend engineering, frontend development, and the connective tissue in between. I&apos;ve built industrial control systems, observability platforms, and developer tools — always with the same question in mind: <strong>how can this be clearer, safer, and kinder to the person using it?</strong></p>
-            <div className="signature"><span>KM</span><small>engineered in Sri Lanka<br />for a wider world</small></div>
-          </div>
-        </div>
-        <div className="stats-row">
-          <div><strong>3.78</strong><span>CGPA / SLIIT</span></div>
-          <div><strong>2026</strong><span>ICCTA publication</span></div>
-          <div><strong>01</strong><span>best presentation award</span></div>
-          <div><strong>∞</strong><span>things still to learn</span></div>
-        </div>
-      </section>
+      <section className="about page-width section-space" id="about"><div className="section-kicker"><span>01</span><span>About me</span></div><div className="about-grid"><div><h2>Thoughtful by default.<br /><span>Technical by nature.</span></h2></div><div className="about-copy"><p className="large-copy">The best software gives people confidence.</p><p>I&apos;m a software engineer with experience across REST APIs, microservices, cloud platforms, React applications, and CI/CD automation. I enjoy the deep technical problems — but I care just as much about how the finished work feels to the people who depend on it.</p><p>That means clean code, calm interfaces, good documentation, and teams where knowledge moves freely.</p><a className="inline-link" href="mailto:kaweesha.mr@gmail.com">Get to know me <ArrowUpRight size={15} /></a></div></div><div className="about-note"><ShieldCheck size={18} /><span>My north star: make systems clearer, safer, and easier to live with.</span></div></section>
 
-      <section className="work section-shell" id="work">
-        <div className="section-heading">
-          <div className="section-label">02 <span>/</span> SELECTED WORK</div>
-          <p>Not just features shipped.<br /><span>Systems made steadier.</span></p>
-        </div>
-        <div className="project-list">
-          {projects.map((project) => (
-            <article className={`project-card project-${project.color}`} key={project.index}>
-              <div className="project-index">{project.index}</div>
-              <div className="project-main">
-                <div className="project-kicker">{project.type}</div>
-                <h3>{project.title}</h3>
-                <p className="project-subtitle">{project.subtitle}</p>
-                <p className="project-summary">{project.summary}</p>
-                <div className="project-footer"><div className="tag-list">{project.stack.slice(0, 3).map((tag) => <span key={tag}>{tag}</span>)}</div><button onClick={() => setSelectedProject(project)}>Open case note <span>↗</span></button></div>
-              </div>
-              <div className="project-art" aria-hidden="true">
-                {project.color === "lime" && <><div className="switchgear-lines"><span /><span /><span /><span /></div><div className="switchgear-node">A</div><div className="switchgear-node node-two">B</div><div className="switchgear-node node-three">C</div></>}
-                {project.color === "blue" && <><div className="signal-wave wave-one" /><div className="signal-wave wave-two" /><div className="signal-wave wave-three" /><div className="signal-core">N</div></>}
-                {project.color === "orange" && <><div className="research-orbit orbit-a" /><div className="research-orbit orbit-b" /><div className="research-core">CI</div><span className="research-star star-one">+</span><span className="research-star star-two">+</span></>}
-              </div>
-              <div className="project-signal">{project.signal}</div>
-            </article>
-          ))}
-        </div>
-      </section>
+      <section className="work page-width section-space" id="work"><div className="section-head"><div><div className="section-kicker"><span>02</span><span>Selected work</span></div><h2>Built to work<br /><span>in the real world.</span></h2></div><p>Production systems, research, and the connective tissue in between.</p></div><div className="project-grid">{projects.map((project) => <article className={`project-card ${project.tone}`} key={project.number}><div className="project-top"><span className="project-number">{project.number}</span><IconBadge icon={project.icon} tone={project.tone} /></div><div className="project-label">{project.label}</div><h3>{project.title}</h3><p>{project.description}</p><div className="project-bottom"><div className="tag-row">{project.technologies.map((technology) => <span key={technology}>{technology}</span>)}</div><button onClick={() => setSelectedProject(project)} aria-label={`Read more about ${project.title}`}>Read case note <ArrowUpRight size={15} /></button></div></article>)}</div></section>
 
-      <section className="process section-shell">
-        <div className="section-label">03 <span>/</span> HOW I WORK</div>
-        <div className="process-grid">
-          <div className="process-intro"><h2>Clarity is a technical skill.</h2><p>I bring a systems view to the work, then make room for the human one.</p></div>
-          <div className="principles">
-            <div className="principle"><span>01</span><div><h3>Start with the edges.</h3><p>What happens when the network drops? When the user is tired? The edge cases are usually the actual cases.</p></div></div>
-            <div className="principle"><span>02</span><div><h3>Make the invisible legible.</h3><p>Good observability, clear naming, and an interface that explains itself beat cleverness every time.</p></div></div>
-            <div className="principle"><span>03</span><div><h3>Share what you learn.</h3><p>Whether it&apos;s a code review or a knowledge-sharing session, the best systems grow through generous teams.</p></div></div>
-          </div>
-        </div>
-      </section>
+      <section className="dark-section" id="toolkit"><div className="page-width section-space"><div className="section-kicker light"><span>03</span><span>Technical toolkit</span></div><div className="toolkit-head"><h2>Comfortable at<br /><span>every layer.</span></h2><p>From a clean API contract to the deployment pipeline that keeps it healthy.</p></div><div className="toolkit-grid">{toolkit.map((item) => <div className="toolkit-item" key={item.title}><IconBadge icon={item.icon} tone="dark" /><div><h3>{item.title}</h3><p>{item.detail}</p></div><ArrowUpRight size={17} /></div>)}</div><div className="tool-list"><span>Java</span><span>Spring Boot</span><span>Go</span><span>Node.js</span><span>React</span><span>Next.js</span><span>TypeScript</span><span>PostgreSQL</span><span>AWS</span><span>Docker</span><span>Kubernetes</span><span>Terraform</span><span>GitHub Actions</span><span>Keycloak</span></div></div></section>
 
-      <section className="toolkit section-shell" id="toolkit">
-        <div className="toolkit-copy"><div className="section-label">04 <span>/</span> THE TOOLKIT</div><h2>Deep enough to go low-level. Curious enough to zoom out.</h2><p>My comfort zone is wherever the problem is interesting: a Spring Boot service, a React interface, a Terraform plan, or the conversation that makes the whole thing simpler.</p></div>
-        <div className="capability-list">{capabilities.map((item, i) => <div className="capability" key={item.name}><span className="capability-num">0{i + 1}</span><span className="capability-name">{item.name}</span><span className="capability-value">{item.value}</span></div>)}</div>
-        <div className="tech-cloud" aria-label="Technology list"><span>Spring Boot</span><span>Next.js</span><span>PostgreSQL</span><span>Kubernetes</span><span>RabbitMQ</span><span>GitHub Actions</span><span>Terraform</span><span>Tailwind</span><span>Redis</span><span>Keycloak</span><span>Docker</span><span>Figma</span></div>
-      </section>
+      <section className="experience page-width section-space"><div className="section-kicker"><span>04</span><span>Experience & recognition</span></div><div className="experience-grid"><div className="timeline"><div className="timeline-item current"><span className="timeline-year">Jul 2026 — now</span><div><h3>Software Engineer</h3><p>Virtusa · SSE for WILEY project</p><small>Power Automate & RPA solutions for better business workflows.</small></div></div><div className="timeline-item"><span className="timeline-year">Dec 2025 — Jul 2026</span><div><h3>Software Engineer</h3><p>Entgra</p><small>RESTful APIs, WSO2 platform integrations, production debugging, and CI/CD automation.</small></div></div><div className="timeline-item"><span className="timeline-year">Feb 2025 — Dec 2025</span><div><h3>Software Engineer Intern</h3><p>Wiley Global Technologies</p><small>Microservices and cloud technologies across Kubernetes, RabbitMQ, AWS, and Terraform.</small></div></div><div className="timeline-item"><span className="timeline-year">Jan 2024 — Jun 2024</span><div><h3>Trainee Software Engineer</h3><p>Coduza PVT (LTD)</p><small>Next.js and Node.js platform work for the Cancer Victims Association Sri Lanka.</small></div></div></div><div className="recognition-card"><div className="recognition-icon"><Award size={25} /></div><div className="recognition-label">Recognition</div><h3>Research that made it out of the room.</h3><p>Synapse CI: Intelligent Test Prioritization & Chaos Engineering Framework</p><div className="recognition-list"><span><Award size={15} /> Best of Session Presentation · ICCTA 2026</span><span><BookOpen size={15} /> Presented in Austria</span><span><GraduationCap size={15} /> Dean&apos;s List · Seven semesters</span></div></div></div></section>
 
-      <section className="closing section-shell" id="contact">
-        <div className="closing-orbit" aria-hidden="true"><span>✳</span></div>
-        <div className="section-label">05 <span>/</span> YOUR TURN</div>
-        <h2>Have a good problem?<br /><em>Let&apos;s make it useful.</em></h2>
-        <p>I&apos;m always interested in ambitious products, thoughtful teams, and conversations that start with “what if?”</p>
-        <a className="button button-primary button-large" href="mailto:kaweesha.mr@gmail.com">kaweesha.mr@gmail.com <span>↗</span></a>
-        <div className="social-links"><a href="https://www.linkedin.com/in/kaweeshamr/" target="_blank" rel="noreferrer">LinkedIn <span>↗</span></a><a href="https://github.com/Kaweesha-mr" target="_blank" rel="noreferrer">GitHub <span>↗</span></a><a href="tel:+94770723273">+94 77 072 3273</a></div>
-      </section>
+      <section className="contact page-width" id="contact"><div className="contact-card"><div className="section-kicker light"><span>05</span><span>Get in touch</span></div><h2>Let&apos;s build<br /><span>something useful.</span></h2><p>I&apos;m open to thoughtful products, ambitious technical challenges, and teams that care about how they work.</p><a className="button button-light" href="mailto:kaweesha.mr@gmail.com"><Mail size={16} /> kaweesha.mr@gmail.com <ArrowUpRight size={16} /></a><div className="contact-links"><a href="https://www.linkedin.com/in/kaweeshamr/" target="_blank" rel="noreferrer"><Network size={16} /> LinkedIn <ExternalLink size={13} /></a><a href="https://github.com/Kaweesha-mr" target="_blank" rel="noreferrer"><GitBranch size={16} /> GitHub <ExternalLink size={13} /></a><a href="tel:+94770723273"><Phone size={16} /> +94 77 072 3273</a></div></div></section>
 
-      <footer className="site-footer section-shell"><span>© 2026 KAWEESHA MARASINGHE</span><span>BUILT WITH CURIOSITY / LK</span><a href="#top">BACK TO TOP ↑</a></footer>
+      <footer className="footer page-width"><span>© 2026 Kaweesha Marasinghe</span><span>Software Engineer · Colombo, Sri Lanka</span><a href="#top">Back to top <ArrowUpRight size={13} /></a></footer>
 
-      {selectedProject && <div className="modal-backdrop"><div className={`case-modal project-${selectedProject.color}`} role="dialog" aria-modal="true" aria-labelledby="case-title"><button className="modal-close" onClick={() => setSelectedProject(null)} aria-label="Close case note">×</button><div className="project-kicker">{selectedProject.index} / {selectedProject.type}</div><h2 id="case-title">{selectedProject.title}</h2><p className="modal-subtitle">{selectedProject.subtitle}</p><p>{selectedProject.detail}</p><div className="modal-stack">{selectedProject.stack.map((tag) => <span key={tag}>{tag}</span>)}</div><div className="modal-note">{selectedProject.signal}</div></div></div>}
+      {selectedProject && <div className="modal-backdrop"><div className={`case-modal ${selectedProject.tone}`} role="dialog" aria-modal="true" aria-labelledby="case-title"><button className="modal-close" onClick={() => setSelectedProject(null)} aria-label="Close case note"><X size={20} /></button><div className="project-label">{selectedProject.number} / {selectedProject.label}</div><h2 id="case-title">{selectedProject.title}</h2><p className="modal-lede">{selectedProject.description}</p><p>{selectedProject.detail}</p><div className="tag-row">{selectedProject.technologies.map((technology) => <span key={technology}>{technology}</span>)}</div></div></div>}
     </main>
   );
 }
