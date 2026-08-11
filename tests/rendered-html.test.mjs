@@ -23,7 +23,7 @@ test("server-renders Kaweesha's portfolio", async () => {
 
   const html = await response.text();
   assert.match(html, /<title>Kaweesha Marasinghe — Software Engineer<\/title>/i);
-  assert.match(html, /Software engineer building/);
+  assert.match(html, /KAWEESHA/);
   assert.match(html, /Switchgear \/ ADMS/);
   assert.match(html, /NEXA Platform/);
   assert.match(html, /Synapse CI/);
