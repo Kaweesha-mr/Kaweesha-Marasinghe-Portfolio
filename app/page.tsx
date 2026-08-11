@@ -145,11 +145,26 @@ export default function Home() {
         <a className="header-cta" href="/Kaweesha-Marasinghe-Resume-2.pdf" download><Download size={14} /> CV</a>
       </header>
 
-      <section className="hero" id="top">
-        <div className="hero-topline page-width"><span>©2026</span><span>/ SOFTWARE ENGINEER / COLOMBO, LK</span></div>
-        <div className="page-width hero-content"><p className="hero-kicker">BUILDING SINCE 2024</p><h1>KAWEESHA<br /><span>MARASINGHE</span></h1><h2>SOFTWARE ENGINEER</h2><p className="hero-subtitle">Java · Spring Boot · React · Cloud · Full-Stack · Developer Experience</p><div className="hero-actions"><a className="button button-dark" href="#experience">View career <ArrowRight size={15} /></a><a className="button button-quiet" href="mailto:kaweesha.mr@gmail.com">Get in touch <ArrowUpRight size={15} /></a></div><p className="hero-hint"><GitBranch size={13} /> git log --graph --all · select any milestone</p></div>
-        <div className="timeline-visual page-width" aria-label="Career timeline visual"><div className="timeline-axis"><span>2024</span><span>2025</span><span>2026</span></div><div className="timeline-track track-blue"><i /><i /><i /><b>CURRENT</b></div><div className="timeline-track track-violet"><i /><i /><b>ICCTA 2026</b></div><div className="timeline-track track-orange"><i /><b>BEST SESSION PRESENTATION</b></div><div className="timeline-head">HEAD <ArrowRight size={12} /></div></div>
-        <a className="scroll-hint page-width" href="#about"><span>Scroll to explore</span><ArrowRight size={14} /></a>
+      <section className="hero hero-night" id="top">
+        <div className="hero-night-gridlines" aria-hidden="true" />
+        <div className="hero-topline page-width"><span><i className="hero-live-dot" /> KAWEESHA MR / 001</span><span>SOFTWARE ENGINEER · COLOMBO, LK</span></div>
+        <div className="page-width hero-night-grid">
+          <div className="hero-night-copy">
+            <p className="hero-kicker">ENGINEERING / SYSTEMS / PEOPLE</p>
+            <h1><span>Kaweesha</span><span>Marasinghe</span></h1>
+            <div className="hero-role"><span>01</span><h2>Software Engineer</h2></div>
+            <p className="hero-subtitle">Java · Spring Boot · React · Cloud · Full-Stack</p>
+            <p className="hero-description">I build dependable software for complex systems — with the curiosity to go deep and the care to make it useful.</p>
+            <div className="hero-actions"><a className="button button-dark" href="#experience">Explore my work <ArrowRight size={15} /></a><a className="button button-quiet" href="mailto:kaweesha.mr@gmail.com">Start a conversation <ArrowUpRight size={15} /></a></div>
+            <div className="hero-command"><GitBranch size={13} /><span>currently building</span><b>systems people can rely on</b></div>
+          </div>
+          <div className="hero-console" aria-label="Kaweesha Marasinghe engineering focus">
+            <div className="console-header"><span>KAWEESHA.OS</span><span className="console-status"><i /> ONLINE</span></div>
+            <div className="console-core"><div className="core-grid" /><div className="core-ring ring-one" /><div className="core-ring ring-two" /><div className="core-ring ring-three" /><div className="core-node node-one" /><div className="core-node node-two" /><div className="core-node node-three" /><div className="core-letter">K<span>.</span></div><div className="core-caption">BUILD / SHIP / LEARN</div></div>
+            <div className="console-readout"><div><span>FOCUS</span><strong>BACKEND + CLOUD</strong></div><div><span>STACK</span><strong>JAVA / REACT</strong></div><div><span>MODE</span><strong>ALWAYS LEARNING</strong></div></div>
+          </div>
+        </div>
+        <div className="hero-night-footer page-width"><span>© 2026 / BUILD 01</span><a href="#about"><span className="footer-arrow">↓</span> SCROLL TO EXPLORE</a><span>MADE WITH INTENT</span></div>
       </section>
 
       <section className="metrics-strip"><div className="page-width metrics-grid"><div><strong>2+</strong><span>years in software engineering</span></div><div><strong>3.78</strong><span>CGPA · SLIIT</span></div><div><strong>01</strong><span>conference presentation award</span></div><div><strong>07</strong><span>semesters on the Dean&apos;s List</span></div></div></section>
