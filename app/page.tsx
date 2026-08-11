@@ -158,10 +158,11 @@ export default function Home() {
             <div className="hero-actions"><a className="button button-dark" href="#experience">Explore my work <ArrowRight size={15} /></a><a className="button button-quiet" href="mailto:kaweesha.mr@gmail.com">Start a conversation <ArrowUpRight size={15} /></a></div>
             <div className="hero-command"><GitBranch size={13} /><span>currently building</span><b>systems people can rely on</b></div>
           </div>
-          <div className="hero-console" aria-label="Kaweesha Marasinghe engineering focus">
-            <div className="console-header"><span>KAWEESHA.OS</span><span className="console-status"><i /> ONLINE</span></div>
-            <div className="console-core"><div className="core-grid" /><div className="core-ring ring-one" /><div className="core-ring ring-two" /><div className="core-ring ring-three" /><div className="core-node node-one" /><div className="core-node node-two" /><div className="core-node node-three" /><div className="core-letter">K<span>.</span></div><div className="core-caption">BUILD / SHIP / LEARN</div></div>
-            <div className="console-readout"><div><span>FOCUS</span><strong>BACKEND + CLOUD</strong></div><div><span>STACK</span><strong>JAVA / REACT</strong></div><div><span>MODE</span><strong>ALWAYS LEARNING</strong></div></div>
+          <div className="hero-console practice-card" aria-label="Kaweesha Marasinghe's engineering approach">
+            <div className="console-header"><span>HOW I WORK</span><span className="console-status"><i /> 04 STEPS</span></div>
+            <div className="practice-intro"><span>FROM IDEA TO IMPACT</span><strong>Make complex<br /><em>feel clear.</em></strong></div>
+            <div className="practice-list"><div className="practice-step"><span>01</span><div><strong>Understand</strong><p>Ask better questions.</p></div><ArrowRight size={14} /></div><div className="practice-step"><span>02</span><div><strong>Design</strong><p>Shape the right system.</p></div><ArrowRight size={14} /></div><div className="practice-step"><span>03</span><div><strong>Ship</strong><p>Build with confidence.</p></div><ArrowRight size={14} /></div><div className="practice-step"><span>04</span><div><strong>Share</strong><p>Leave knowledge behind.</p></div><CheckCircle2 size={14} /></div></div>
+            <div className="practice-footer"><span><i /> ALWAYS LEARNING</span><b>JAVA · REACT · CLOUD</b></div>
           </div>
         </div>
         <div className="hero-night-footer page-width"><span>© 2026 / BUILD 01</span><a href="#about"><span className="footer-arrow">↓</span> SCROLL TO EXPLORE</a><span>MADE WITH INTENT</span></div>
