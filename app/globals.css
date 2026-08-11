@@ -147,3 +147,11 @@ button { color:inherit; font:inherit; border:0; cursor:pointer; }
 @keyframes earth-turn { to { transform:rotate(378deg); } }
 @media (max-width:620px) { .mission-field { top:285px; right:-19%; width:127%; height:590px; opacity:.6; }.mission-heading { top:8%; right:10%; font-size:7px; }.orbit-production { right:-15%; bottom:10%; width:390px; height:185px; }.orbit-research { right:3%; bottom:22%; width:300px; height:145px; }.orbit-community { right:18%; bottom:21%; width:190px; height:290px; }.mission-satellite { transform:scale(.76) rotate(-14deg); }.satellite-production { top:33%; left:10%; }.satellite-research { top:17%; right:20%; transform:scale(.76) rotate(17deg); }.satellite-community { bottom:18%; left:23%; transform:scale(.76) rotate(-28deg); }.earth { right:3%; bottom:10%; width:185px; height:185px; }.land-one { width:67px; height:42px; }.land-two { width:58px; height:34px; }.land-three { width:36px; height:24px; }.earth-label { bottom:14px; font-size:7px; }.mission-label { font-size:7px; }.mission-label b { font-size:6px; }.label-production { top:36%; left:2%; }.label-research { top:12%; right:7%; }.label-community { bottom:23%; left:9%; }.mission-caption { left:30%; bottom:7%; font-size:6px; } }
 @media (prefers-reduced-motion:reduce) { .mission-field::before,.mission-field::after,.mission-particles i,.mission-orbit,.mission-satellite,.earth-grid { animation:none!important; } }
+.mission-orbit,.mission-satellite { display:none; }
+.mission-orbit { display:block; }
+.mission-satellite { display:flex; }
+.earth { width:275px; height:275px; overflow:visible; border:0; background:transparent; box-shadow:none; }
+.orbital-earth-canvas { position:absolute; inset:-8%; width:116%; height:116%; overflow:hidden; border:1px solid rgba(101,151,255,.52); border-radius:50%; box-shadow:0 0 0 8px rgba(68,120,255,.07),0 0 42px rgba(42,108,255,.3); cursor:crosshair; }
+.orbital-earth-canvas canvas { display:block; width:100%; height:100%; }
+.earth-label { bottom:-20px; color:#aac4ff; text-shadow:0 1px 8px #061535; }
+@media (max-width:620px) { .earth { width:205px; height:205px; }.orbital-earth-canvas { inset:-10%; width:120%; height:120%; }.earth-label { bottom:-18px; font-size:7px; } }

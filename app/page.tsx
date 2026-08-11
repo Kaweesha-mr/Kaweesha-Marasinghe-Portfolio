@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import * as THREE from "three";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
@@ -53,6 +54,86 @@ type GithubRepo = {
   stargazers_count: number;
   fork: boolean;
 };
+
+function OrbitalEarth() {
+  const mountRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const mount = mountRef.current;
+    if (!mount) return;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(27, 1, 0.1, 100);
+    camera.position.set(0, 0.05, 3.35);
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
+    renderer.setClearColor(0x000000, 0);
+    mount.appendChild(renderer.domElement);
+
+    const earthVertex = `varying vec2 vUv; varying vec3 vNormal; varying vec3 vWorldPosition;
+      void main() { vUv = uv; vNormal = normalize(normalMatrix * normal); vec4 worldPosition = modelMatrix * vec4(position, 1.0); vWorldPosition = worldPosition.xyz; gl_Position = projectionMatrix * viewMatrix * worldPosition; }`;
+    const earthFragment = `uniform float uTime; varying vec2 vUv; varying vec3 vNormal; varying vec3 vWorldPosition;
+      float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+      float noise(vec2 p) { vec2 i=floor(p), f=fract(p); f=f*f*(3.0-2.0*f); return mix(mix(hash(i),hash(i+vec2(1.0,0.0)),f.x),mix(hash(i+vec2(0.0,1.0)),hash(i+vec2(1.0,1.0)),f.x),f.y); }
+      float fbm(vec2 p) { float value=0.0; float amplitude=.5; for(int i=0;i<5;i++){ value+=amplitude*noise(p); p*=2.03; amplitude*=.5; } return value; }
+      void main() { vec3 lightDirection=normalize(vec3(-0.45,0.65,1.0)); float light=max(dot(vNormal,lightDirection),0.0); float detail=fbm(vUv*vec2(7.0,4.0)+vec2(uTime*.004,0.0)); float terrain=fbm(vUv*vec2(9.0,5.0))+0.16*sin(vUv.x*17.0)*sin(vUv.y*9.0); float land=smoothstep(.48,.59,terrain); vec3 ocean=mix(vec3(.018,.13,.38),vec3(.045,.42,.9),detail); vec3 landColor=mix(vec3(.025,.32,.22),vec3(.25,.86,.54),detail); vec3 color=mix(ocean,landColor,land); float clouds=smoothstep(.62,.78,fbm(vUv*vec2(14.0,8.0)+vec2(uTime*.008,0.0))); color=mix(color,color+vec3(.24,.32,.48),clouds*.18); color*=mix(.7,1.18,light); float rim=pow(1.0-max(dot(vNormal,vec3(0.0,0.0,1.0)),0.0),3.2); color+=vec3(.16,.42,1.0)*rim*.9; gl_FragColor=vec4(color,1.0); }`;
+    const earthMaterial = new THREE.ShaderMaterial({ uniforms: { uTime: { value: 0 } }, vertexShader: earthVertex, fragmentShader: earthFragment });
+    const earthGroup = new THREE.Group();
+    const earth = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 96), earthMaterial);
+    earthGroup.add(earth);
+
+    const atmosphereMaterial = new THREE.ShaderMaterial({
+      transparent: true,
+      side: THREE.BackSide,
+      blending: THREE.AdditiveBlending,
+      vertexShader: `varying vec3 vNormal; void main() { vNormal = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+      fragmentShader: `varying vec3 vNormal; void main() { float intensity=pow(.68-dot(vNormal,vec3(0.0,0.0,1.0)),2.4); gl_FragColor=vec4(.18,.48,1.0,intensity*.72); }`,
+    });
+    earthGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.065, 72, 72), atmosphereMaterial));
+    scene.add(earthGroup, new THREE.AmbientLight(0x7d9dff, 1.5)); const keyLight = new THREE.DirectionalLight(0xd7e5ff, 2.8); keyLight.position.set(-3, 2, 4); scene.add(keyLight);
+
+    const orbitMaterial = new THREE.LineBasicMaterial({ color: 0x5687ff, transparent: true, opacity: 0.34 });
+    const satelliteEntries: Array<{ group: THREE.Group; radius: number; speed: number; phase: number }> = [];
+    const makeOrbit = (radius: number, flatten: number, tilt: number) => {
+      const points = new THREE.EllipseCurve(0, 0, radius, radius * flatten, 0, Math.PI * 2, false, 0).getPoints(128).map((point) => new THREE.Vector3(point.x, 0, point.y));
+      const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), orbitMaterial);
+      line.rotation.set(tilt, 0.2, tilt * 0.35);
+      scene.add(line);
+    };
+    const makeSatellite = (color: number, radius: number, speed: number, phase: number, tilt: number) => {
+      const group = new THREE.Group();
+      const body = new THREE.Mesh(new THREE.BoxGeometry(.12, .1, .1), new THREE.MeshStandardMaterial({ color: 0xd7e5ff, emissive: color, emissiveIntensity: .4, metalness: .75, roughness: .3 }));
+      const panelMaterial = new THREE.MeshBasicMaterial({ color });
+      const leftPanel = new THREE.Mesh(new THREE.BoxGeometry(.19, .012, .105), panelMaterial);
+      const rightPanel = leftPanel.clone();
+      leftPanel.position.x = -.17; rightPanel.position.x = .17;
+      group.add(body, leftPanel, rightPanel);
+      group.rotation.z = tilt;
+      scene.add(group);
+      satelliteEntries.push({ group, radius, speed, phase });
+    };
+    makeOrbit(1.3, .48, -.25); makeOrbit(1.5, .58, .4); makeOrbit(1.68, .72, .72);
+    makeSatellite(0x6f9aff, 1.3, .34, .4, -.2); makeSatellite(0x5cc3c5, 1.5, -.23, 2.5, .3); makeSatellite(0x9b7cff, 1.68, .16, 4.4, .5);
+
+    const starPositions = new Float32Array(240 * 3);
+    for (let index = 0; index < 240; index += 1) { const radius = 2.6 + Math.random() * 2.4; const theta = Math.random() * Math.PI * 2; const phi = Math.acos(2 * Math.random() - 1); starPositions[index * 3] = radius * Math.sin(phi) * Math.cos(theta); starPositions[index * 3 + 1] = radius * Math.cos(phi); starPositions[index * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta); }
+    const stars = new THREE.Points(new THREE.BufferGeometry().setAttribute("position", new THREE.BufferAttribute(starPositions, 3)), new THREE.PointsMaterial({ color: 0x8eafff, size: .018, transparent: true, opacity: .72, sizeAttenuation: true }));
+    scene.add(stars);
+
+    const resize = () => { const width = mount.clientWidth || 320; const height = mount.clientHeight || 320; camera.aspect = width / height; camera.updateProjectionMatrix(); renderer.setSize(width, height, false); };
+    const observer = new ResizeObserver(resize); observer.observe(mount); resize();
+    let pointerX = 0; let pointerY = 0;
+    const onPointerMove = (event: PointerEvent) => { const bounds = mount.getBoundingClientRect(); pointerX = ((event.clientX - bounds.left) / bounds.width - .5) * .22; pointerY = ((event.clientY - bounds.top) / bounds.height - .5) * .16; };
+    mount.addEventListener("pointermove", onPointerMove);
+    const clock = new THREE.Clock(); let frame = 0;
+    const animate = () => { const elapsed = clock.getElapsedTime(); earthMaterial.uniforms.uTime.value = elapsed; earth.rotation.y = elapsed * .045; earthGroup.rotation.x += (pointerY - earthGroup.rotation.x) * .025; earthGroup.rotation.y += (pointerX - earthGroup.rotation.y) * .025; stars.rotation.y = elapsed * .006; satelliteEntries.forEach(({ group, radius, speed, phase }) => { const angle = elapsed * speed + phase; group.position.set(Math.cos(angle) * radius, Math.sin(angle * .72) * radius * .22, Math.sin(angle) * radius * .62); group.lookAt(0, 0, 0); }); renderer.render(scene, camera); frame = requestAnimationFrame(animate); };
+    animate();
+    return () => { cancelAnimationFrame(frame); observer.disconnect(); mount.removeEventListener("pointermove", onPointerMove); renderer.dispose(); earthMaterial.dispose(); atmosphereMaterial.dispose(); mount.removeChild(renderer.domElement); };
+  }, []);
+
+  return <div className="orbital-earth-canvas" ref={mountRef} aria-hidden="true" />;
+}
 
 const projects: Project[] = [
   {
@@ -158,7 +239,7 @@ export default function Home() {
             <div className="hero-actions"><a className="button button-dark" href="#experience">Explore my work <ArrowRight size={15} /></a><a className="button button-quiet" href="mailto:kaweesha.mr@gmail.com">Start a conversation <ArrowUpRight size={15} /></a></div>
             <div className="hero-command"><GitBranch size={13} /><span>currently building</span><b>systems people can rely on</b></div>
           </div>
-          <div className="hero-storyfield mission-field" role="img" aria-label="An animated mission map showing Earth, satellites, and the engineering areas Kaweesha works across"><div className="mission-particles"><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /></div><div className="mission-heading"><span>MISSION MAP / 001</span><b>COLOMBO ORIGIN</b></div><div className="mission-orbit orbit-production" /><div className="mission-orbit orbit-research" /><div className="mission-orbit orbit-community" /><div className="mission-satellite satellite-production"><span className="sat-panel left" /><span className="satellite-body"><i /></span><span className="sat-panel right" /></div><div className="mission-satellite satellite-research"><span className="sat-panel left" /><span className="satellite-body"><i /></span><span className="sat-panel right" /></div><div className="mission-satellite satellite-community"><span className="sat-panel left" /><span className="satellite-body"><i /></span><span className="sat-panel right" /></div><div className="earth"><div className="earth-grid" /><div className="earth-land land-one" /><div className="earth-land land-two" /><div className="earth-land land-three" /><span className="earth-label">ORIGIN / COLOMBO, LK</span></div><div className="mission-label label-production"><i /> <span>01 / BUILD</span><b>PRODUCTION SYSTEMS</b></div><div className="mission-label label-research"><i /> <span>02 / RESEARCH</span><b>SYNAPSE CI · ICCTA 2026</b></div><div className="mission-label label-community"><i /> <span>03 / SHARE</span><b>COMMUNITY & KNOWLEDGE</b></div><div className="mission-caption">ONE ORIGIN / MANY ORBITS / ALWAYS MOVING FORWARD</div></div>
+          <div className="hero-storyfield mission-field" role="img" aria-label="An animated 3D Earth with orbiting satellites representing Kaweesha's engineering work"><div className="mission-particles"><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /></div><div className="mission-heading"><span>MISSION MAP / 001</span><b>COLOMBO ORIGIN</b></div><div className="mission-orbit orbit-production" /><div className="mission-orbit orbit-research" /><div className="mission-orbit orbit-community" /><div className="mission-satellite satellite-production"><span className="sat-panel left" /><span className="satellite-body"><i /></span><span className="sat-panel right" /></div><div className="mission-satellite satellite-research"><span className="sat-panel left" /><span className="satellite-body"><i /></span><span className="sat-panel right" /></div><div className="mission-satellite satellite-community"><span className="sat-panel left" /><span className="satellite-body"><i /></span><span className="sat-panel right" /></div><div className="earth"><OrbitalEarth /><span className="earth-label">ORIGIN / COLOMBO, LK</span></div><div className="mission-label label-production"><i /> <span>01 / BUILD</span><b>PRODUCTION SYSTEMS</b></div><div className="mission-label label-research"><i /> <span>02 / RESEARCH</span><b>SYNAPSE CI · ICCTA 2026</b></div><div className="mission-label label-community"><i /> <span>03 / SHARE</span><b>COMMUNITY & KNOWLEDGE</b></div><div className="mission-caption">ONE ORIGIN / MANY ORBITS / ALWAYS MOVING FORWARD</div></div>
         </div>
         <div className="hero-night-footer page-width"><span>© 2026 / BUILD 01</span><a href="#about"><span className="footer-arrow">↓</span> SCROLL TO EXPLORE</a><span>MADE WITH INTENT</span></div>
       </section>
