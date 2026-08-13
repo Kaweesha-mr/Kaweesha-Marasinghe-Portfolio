@@ -23,6 +23,8 @@ import {
   Server,
   Users,
   X,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 type Project = {
@@ -197,14 +199,14 @@ const researchSteps = [
 ];
 
 const campusMoments = [
-  { src: "/campus/deans-list-award-2026.jpg", alt: "Kaweesha receiving a Dean's List award in 2026", label: "RECOGNITION", title: "Dean's List Awards", detail: "Academic excellence, celebrated with the people who make the journey meaningful.", size: "large" },
-  { src: "/campus/itp-guide-promo.jpg", alt: "ITP Guide 9.0 promotional poster featuring Kaweesha", label: "KNOWLEDGE SHARING", title: "ITP Guide 9.0", detail: "A student community session built around UI/UX, ITP foundations, and AI use cases.", size: "tall" },
-  { src: "/campus/itp-guide-session.jpg", alt: "Kaweesha helping students during an ITP Guide session", label: "MENTORING", title: "Learning in the room", detail: "Helping peers move from questions to practical understanding.", size: "wide" },
-  { src: "/campus/deans-list-award-certificate.jpg", alt: "Kaweesha receiving an academic certificate", label: "ACADEMIC JOURNEY", title: "The work behind the award", detail: "A reminder that consistent effort compounds over every semester.", size: "portrait" },
-  { src: "/campus/deans-list-award-2024.jpg", alt: "Kaweesha with peers holding academic certificates", label: "COMMUNITY", title: "Growing together", detail: "Celebrating milestones alongside the people who shared the same late nights.", size: "wide" },
-  { src: "/campus/deans-list-award-stage-2024.jpg", alt: "Kaweesha receiving a Dean's List certificate on stage", label: "DEAN'S LIST", title: "A moment of gratitude", detail: "Recognition is meaningful when it reflects discipline, support, and persistence.", size: "portrait" },
-  { src: "/campus/deans-list-group-2024.jpg", alt: "Dean's List award ceremony group photograph", label: "SLIIT / 2024", title: "Shared achievement", detail: "A campus milestone remembered as a collective celebration.", size: "large" },
-  { src: "/campus/deans-list-friends.jpg", alt: "Kaweesha with friends after receiving academic certificates", label: "THE PEOPLE AROUND ME", title: "Better together", detail: "The campus story is also a story about friendship, encouragement, and showing up.", size: "wide" },
+  { src: "/campus/deans-list-award-2026.png", alt: "Kaweesha receiving a Dean's List award in 2026", label: "RECOGNITION", title: "Dean's List Awards", detail: "Academic excellence, celebrated with the people who make the journey meaningful.", size: "large" },
+  { src: "/campus/itp-guide-promo.png", alt: "ITP Guide 9.0 promotional poster featuring Kaweesha", label: "KNOWLEDGE SHARING", title: "ITP Guide 9.0", detail: "A student community session built around UI/UX, ITP foundations, and AI use cases.", size: "tall" },
+  { src: "/campus/itp-guide-session.png", alt: "Kaweesha helping students during an ITP Guide session", label: "MENTORING", title: "Learning in the room", detail: "Helping peers move from questions to practical understanding.", size: "wide" },
+  { src: "/campus/deans-list-award-certificate.png", alt: "Kaweesha receiving an academic certificate", label: "ACADEMIC JOURNEY", title: "The work behind the award", detail: "A reminder that consistent effort compounds over every semester.", size: "portrait" },
+  { src: "/campus/deans-list-award-2024.png", alt: "Kaweesha with peers holding academic certificates", label: "COMMUNITY", title: "Growing together", detail: "Celebrating milestones alongside the people who shared the same late nights.", size: "wide" },
+  { src: "/campus/deans-list-award-stage-2024.png", alt: "Kaweesha receiving a Dean's List certificate on stage", label: "DEAN'S LIST", title: "A moment of gratitude", detail: "Recognition is meaningful when it reflects discipline, support, and persistence.", size: "portrait" },
+  { src: "/campus/deans-list-group-2024.png", alt: "Dean's List award ceremony group photograph", label: "SLIIT / 2024", title: "Shared achievement", detail: "A campus milestone remembered as a collective celebration.", size: "large" },
+  { src: "/campus/deans-list-friends.png", alt: "Kaweesha with friends after receiving academic certificates", label: "THE PEOPLE AROUND ME", title: "Better together", detail: "The campus story is also a story about friendship, encouragement, and showing up.", size: "wide" },
 ];
 
 const toolkit = [
@@ -224,6 +226,16 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [githubProfile, setGithubProfile] = useState<GithubProfile | null>(null);
   const [githubRepos, setGithubRepos] = useState<GithubRepo[]>([]);
+  const [activeCampusIndex, setActiveCampusIndex] = useState(0);
+  const [campusPaused, setCampusPaused] = useState(false);
+
+  useEffect(() => {
+    if (campusPaused) return;
+    const timer = window.setInterval(() => {
+      setActiveCampusIndex((index) => (index + 1) % campusMoments.length);
+    }, 5200);
+    return () => window.clearInterval(timer);
+  }, [campusPaused]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -248,6 +260,13 @@ export default function Home() {
   }, [selectedProject]);
 
   const closeMenu = () => setMenuOpen(false);
+  const activeCampusMoment = campusMoments[activeCampusIndex];
+  const showCampusMoment = (index: number) => {
+    setActiveCampusIndex(index);
+    setCampusPaused(true);
+  };
+  const showPreviousCampusMoment = () => showCampusMoment((activeCampusIndex - 1 + campusMoments.length) % campusMoments.length);
+  const showNextCampusMoment = () => showCampusMoment((activeCampusIndex + 1) % campusMoments.length);
 
   return (
     <main>
@@ -290,7 +309,7 @@ export default function Home() {
 
       <section className="toolkit section-space" id="toolkit"><div className="page-width"><div className="section-kicker light"><span>06</span><span>Technical toolkit</span></div><div className="toolkit-head"><h2>Tools I use<br /><span>to make things work.</span></h2><p>A practical stack across application code, infrastructure, data, and delivery.</p></div><div className="toolkit-grid">{toolkit.map((item) => <div className="toolkit-item" key={item.title}><IconBadge icon={item.icon} tone="dark" /><h3>{item.title}</h3><p>{item.detail}</p></div>)}</div></div></section>
 
-      <section className="community campus-life section-space" id="campus"><div className="page-width"><div className="section-head"><div><div className="section-kicker"><span>07</span><span>Campus life / an illustrated archive</span></div><h2>The work<br /><span>behind the work.</span></h2></div><p>A private collection of recognition, mentorship, and the people who shaped my SLIIT years.</p></div><div className="campus-intro"><div><span className="campus-signal"><i /> ARCHIVE / SLIIT / 2023—2026</span><p>Before the job titles and production systems, there were rooms full of people, questions, certificates, and small moments of showing up.</p></div><div className="campus-count"><strong>08</strong><span>selected<br />frames</span></div></div><div className="campus-feature"><figure className="campus-feature-image"><div className="campus-image-wrap"><Image src="/campus/deans-list-award-2026.jpg" alt="Kaweesha receiving a Dean's List award in 2026" width={1600} height={1162} /></div><figcaption><span>01 / RECOGNITION</span><strong>Keep showing up.</strong><p>Dean&apos;s List Awards · 2026</p></figcaption></figure><div className="campus-feature-copy"><span className="campus-signal"><i /> FEATURED MOMENT</span><h3>Achievement is<br /><span>never a solo story.</span></h3><p>Every academic milestone carries the support of friends, mentors, family, and the communities that make effort feel worthwhile.</p><div className="campus-rule"><span>SLIIT / FACULTY OF COMPUTING</span><span>FRAME 01 / 08</span></div></div></div><div className="campus-rail">{campusMoments.slice(1).map((moment, index) => <figure className="campus-rail-item" key={moment.src}><div className="campus-image-wrap"><Image src={moment.src} alt={moment.alt} width={1600} height={1200} /></div><figcaption><span>0{index + 2} / {moment.label}</span><strong>{moment.title}</strong></figcaption></figure>)}</div></div></section>
+      <section className="community campus-life section-space" id="campus"><div className="page-width"><div className="section-head"><div><div className="section-kicker"><span>07</span><span>Campus life / an illustrated archive</span></div><h2>The work<br /><span>behind the work.</span></h2></div><p>A private collection of recognition, mentorship, and the people who shaped my SLIIT years.</p></div><div className="campus-intro"><div><span className="campus-signal"><i /> ARCHIVE / SLIIT / 2023—2026</span><p>Before the job titles and production systems, there were rooms full of people, questions, certificates, and small moments of showing up.</p></div><div className="campus-count"><strong>08</strong><span>selected<br />frames</span></div></div><div className="campus-feature" onMouseEnter={() => setCampusPaused(true)} onMouseLeave={() => setCampusPaused(false)}><figure className="campus-feature-image"><div className="campus-feature-image-stage" key={activeCampusMoment.src}><div className="campus-image-wrap"><Image src={activeCampusMoment.src} alt={activeCampusMoment.alt} width={1600} height={1200} priority={activeCampusIndex === 0} /></div><figcaption><span>{String(activeCampusIndex + 1).padStart(2, "0")} / {activeCampusMoment.label}</span><strong>{activeCampusMoment.title}</strong><p>{activeCampusMoment.detail}</p></figcaption></div><div className="campus-feature-controls"><button type="button" onClick={showPreviousCampusMoment} aria-label="Show previous campus moment"><ChevronLeft size={17} /></button><span>{String(activeCampusIndex + 1).padStart(2, "0")} <i /> {String(campusMoments.length).padStart(2, "0")}</span><button type="button" onClick={showNextCampusMoment} aria-label="Show next campus moment"><ChevronRight size={17} /></button></div></figure><div className="campus-feature-copy"><span className="campus-signal"><i /> {campusPaused ? "ARCHIVE / PAUSED" : "ARCHIVE / AUTO-EDIT"}</span><h3>Achievement is<br /><span>never a solo story.</span></h3><p>Every academic milestone carries the support of friends, mentors, family, and the communities that make effort feel worthwhile.</p><div className="campus-rule"><span>SLIIT / FACULTY OF COMPUTING</span><span>FRAME {String(activeCampusIndex + 1).padStart(2, "0")} / 08</span></div></div></div><div className="campus-rail">{campusMoments.map((moment, index) => <button type="button" className={`campus-rail-item ${index === activeCampusIndex ? "is-active" : ""}`} key={moment.src} onClick={() => showCampusMoment(index)} aria-label={`Show ${moment.title}`}><span className="campus-rail-image"><Image src={moment.src} alt={moment.alt} width={1600} height={1200} /></span><span className="campus-rail-caption"><span>{String(index + 1).padStart(2, "0")} / {moment.label}</span><strong>{moment.title}</strong></span></button>)}</div></div></section>
 
       <section className="contact page-width" id="contact"><div className="contact-card"><div className="section-kicker light"><span>08</span><span>Contact</span></div><h2>Good work starts<br /><span>with a conversation.</span></h2><p>For thoughtful products, ambitious technical challenges, or a conversation about software engineering and research.</p><a className="button button-light" href="mailto:kaweesha.mr@gmail.com"><Mail size={15} /> kaweesha.mr@gmail.com <ArrowUpRight size={15} /></a><div className="contact-links"><a href="https://www.linkedin.com/in/kaweeshamr/" target="_blank" rel="noreferrer"><Network size={15} /> LinkedIn <ExternalLink size={12} /></a><a href="https://github.com/Kaweesha-mr" target="_blank" rel="noreferrer"><GitBranch size={15} /> GitHub <ExternalLink size={12} /></a><a href="tel:+94770723273"><Phone size={15} /> +94 77 072 3273</a></div></div></section>
 
