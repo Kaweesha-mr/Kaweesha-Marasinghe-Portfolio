@@ -40,6 +40,13 @@ jobs:
           GITHUB_PAGES: "true"
           NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
 
+      - name: Flatten generated Pages assets
+        run: |
+          base_path="${{ steps.pages.outputs.base_path }}"
+          generated_dir="dist/client${base_path}"
+          mv "$generated_dir/_next" dist/client/_next
+          rm -rf "$generated_dir"
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
