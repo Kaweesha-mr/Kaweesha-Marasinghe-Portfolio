@@ -538,3 +538,26 @@ button { color:inherit; font:inherit; border:0; cursor:pointer; }
 .toolkit-premium .toolkit-techs { margin-top:20px; padding-top:13px; }
 .toolkit-premium .toolkit-techs span { padding:5px 8px; }
 @media (max-width:620px) { .toolkit-premium .toolkit-grid { margin-top:32px; }.toolkit-premium .toolkit-item { min-height:160px; }.toolkit-premium .toolkit-item h3 { margin-top:22px; }.toolkit-premium .toolkit-techs { margin-top:17px; } }
+
+/* Mobile polish: keep the first screen compact and let the copy lead. */
+@media (max-width:620px) {
+  .hero.hero-night { min-height:790px; padding-top:124px; }
+  .hero-night .hero-topline { top:88px; }
+  .hero-night-grid { min-height:500px; padding-top:18px; }
+  .hero-night .hero-kicker { margin-bottom:16px; font-size:8px; }
+  .hero-night h1 { max-width:330px; font-size:clamp(50px,14.5vw,74px); line-height:.87; letter-spacing:-.095em; }
+  .hero-role { gap:10px; margin-top:23px; }
+  .hero-night h2 { font-size:16px; }
+  .hero-night .hero-subtitle { max-width:300px; font-size:8px; }
+  .hero-description { max-width:300px; margin-top:14px; font-size:12px; line-height:1.5; }
+  .hero-night .hero-actions { flex-direction:row; gap:8px; margin-top:21px; }
+  .hero-night .button { padding:10px 12px; font-size:8px; }
+  .hero-command { margin-top:17px; font-size:8px; }
+  .hero-command b { display:none; }
+  .hero-globe-stage { top:229px; right:-11%; width:108%; height:350px; opacity:.62; }
+  .hero-globe-stage::before { top:46%; right:7%; width:270px; height:270px; }
+  .hero-globe-stage .particle-globe-canvas { top:48%; right:0; width:385px; height:385px; max-width:100%; max-height:100%; }
+  .hero-night-footer { margin-top:0; padding-bottom:18px; font-size:7px; }
+  .about-dark .about-portrait { display:none; }
+  .about-dark .about-grid { gap:0; }
+}
